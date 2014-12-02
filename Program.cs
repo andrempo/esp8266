@@ -14,32 +14,45 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
 
-            SerialPort s = new SerialPort("COM4", 9600);
+            SerialPort s = new SerialPort("COM3", 9600);
 
             s.Open();
-            Console.WriteLine("What File? Default init.lua");
-            string infile = Console.ReadLine();
-            if(string.IsNullOrEmpty(infile))
+            Console.WriteLine("What Directory?");
+            string infolder = Console.ReadLine();
+            if (string.IsNullOrEmpty(infolder))
             {
-                infile = "init.lua";
+                infolder = "Files";
             }
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", infile);
 
-            System.IO.StreamReader file =new System.IO.StreamReader(path);
-            s.Write("file.remove(\"init.lua\")\r");
-            s.Write("file.open(\"init.lua\", \"w\")\r");
-            foreach (string line in File.ReadLines(path))
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files");
+
+            foreach (var item in Directory.GetFiles(path))
             {
-                s.Write("file.writeline([[" + line + "]])\r");
-                Console.WriteLine(line);
-                Thread.Sleep(150);
+
+                System.IO.StreamReader file = new System.IO.StreamReader(item);
+                var fileName = Path.GetFileName(item);
+
+                Console.WriteLine(fileName);
+
+                s.Write(string.Format("file.remove(\"{0}\")\r", fileName));
+                s.Write(string.Format("file.open(\"{0}\", \"w\")\r", fileName));
+                foreach (string line in File.ReadLines(item))
+                {
+                    s.Write("file.writeline([[" + line + "]])\r");
+                    Console.WriteLine(line);
+                    Thread.Sleep(200);
+                }
+                s.Write("file.close()\r");
+
+                file.Close();
+                Console.WriteLine("-------------------");
+
             }
-            s.Write("file.close()\r");
 
 
             s.Close();
-            file.Close();
 
+            Console.WriteLine("Finished");
             Console.ReadLine();
             
 

@@ -4,4 +4,6 @@ C:\Users\adminadam\Desktop\Source\Repos\ConsoleApplication1\ConsoleApplication1\
 C:\Users\adminadam\Desktop\Source\Repos\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.csprojResolveAssemblyReference.cache
 C:\Users\adminadam\Desktop\Source\Repos\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe
 C:\Users\adminadam\Desktop\Source\Repos\ConsoleApplication1\ConsoleApplication1\obj\Debug\ConsoleApplication1.pdb
+C:\Users\adminadam\Desktop\Source\Repos\ConsoleApplication1\ConsoleApplication1\bin\Debug\Files\test.htm
 C:\Users\adminadam\Desktop\Source\Repos\ConsoleApplication1\ConsoleApplication1\bin\Debug\Files\init.lua
+C:\Users\adminadam\Desktop\Source\Repos\ConsoleApplication1\ConsoleApplication1\bin\Debug\Files\index.pht

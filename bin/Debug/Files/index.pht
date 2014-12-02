@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>My Test Page</title>
+</head>
+<body>
+    <form method="post">
+        <input type="submit" value="Go" />
+        <input type="text" name="IO0" value="<?lua print('Hello, world') ?>" />
+    </form>
+	<?lua if (gpio.read(0) == 1) then print("high"); else print("low"); end ?>
+</body>
+</html>
