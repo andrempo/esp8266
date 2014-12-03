@@ -10,10 +10,6 @@ local extmap = {
   lua = "text/html"
 }
 
-local reqTypes = {
-	GET = true,
-	POST = true
-}
 
 local tags = '<%?lua(.-)%?>';
 
@@ -53,14 +49,9 @@ function process(header, conn)
 	-- check if the request is valid, also keep the actual request
 	local i, valid, req = 0, false
 	for w in reqstr:gmatch("%S+") do
-
-		if reqTypes[w] then
-			valid = true;
-		else
-			req = ( i == 1 and w ) or req
-		end
+		valid = (i == 0 and w == "GET") or valid
+		req = ( i == 1 and w ) or req
 		i = i + 1
-
 	end
 
 	-- valid is true if the request is valid, req has the request string
@@ -70,7 +61,6 @@ function process(header, conn)
 
 		if req:find("%?") then
 			local rest
-
 			_, _, fname, rest = req:find("(.*)%?(.*)")
 			-- small trick: end "rest" with a "&" for easier processing
 			-- now look for "var=value" pairs in the request (GET encoding)
@@ -84,7 +74,7 @@ function process(header, conn)
 		else
 			fname = req
 		end
-
+		print(table.concat(reqdata));
 
 		fname = ( fname == "/" ) and "index.pht" or fname:sub(2, -1)
 		s, e = fname:find("%.[%a%d]+$")
@@ -92,7 +82,7 @@ function process(header, conn)
 		ftype = (#ftype > 0 and ftype) or "txt"
 		--fname = basedir .. fname
     
-		
+		print(fname);
 		-- now "fname" has the name of the requested file, and "reqdata" the actual request data
 		-- also "ftype" holds the file type (actually its extension)
 
@@ -103,8 +93,6 @@ function process(header, conn)
 		else
 			conn:send("HTTP/1.1 404 Not Found\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\nPage not found");
 		end
-
-		print("Served: " .. fname .. ", " .. node.heap());
 
 	--valid
 	else
