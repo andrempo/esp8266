@@ -38,7 +38,10 @@ local function docode(thecode)
 end
 
 function process(header, conn)
+
+	print(header);
 	-- look for first line
+	print(header:find("[^\r]+\n"))
 	local s, e = header:find("[^\n]+\n")
 	local reqstr = header:sub(s, e)
 	local respheader, respdata = '', ''
@@ -72,6 +75,7 @@ function process(header, conn)
 		else
 			fname = req
 		end
+		print(table.concat(reqdata));
 
 		fname = ( fname == "/" ) and "index.pht" or fname:sub(2, -1)
 		s, e = fname:find("%.[%a%d]+$")
@@ -84,26 +88,11 @@ function process(header, conn)
 		-- also "ftype" holds the file type (actually its extension)
 
 		if file.open(fname, "r") then
-
 			conn:send("HTTP/1.1 200 OK\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: " .. extmap[ftype or "txt"] .. "\r\n\r\n");
 			-- Preprocess "lua" and "pht" files: run the Lua ones, parse the .htm ones for "<?lua ... ?>" sequences
-			if ftype == "pht" or ftype == "lua" then
-
-				if ftype == "lua" then
-					-- Cannot read all of content to process lua only file
-					parseFile(false,conn)
-				else
-					parseFile(true,conn)
-				end
-
-			else
-				parseFile(false,conn)
-			end
-
-			file.close()
-
+			sendFileContents(conn,ftype);
 		else
-			conn:send("HTTP/1.1 404 Not Found\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\n404 Page not found");
+			conn:send("HTTP/1.1 404 Not Found\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\nPage not found");
 		end
 
 	--valid
@@ -113,12 +102,12 @@ function process(header, conn)
 
 end
 
-parseFile = function(isScript,conn)
 
+sendFileContents = function(conn, type)
 	repeat 
 		local line=file.readline() 
 		if line then 
-			 if isScript then
+			 if type == "pht" then
 				-- single line only script tags, via readline... is there a alternative?
 				conn:send(line:gsub(tags, docode));
 			 else
@@ -126,20 +115,14 @@ parseFile = function(isScript,conn)
 			 end
 		end 
 	until not line 
-
+	file.close();
 end
-
 
 httpserver = function ()
  srv=net.createServer(net.TCP) 
     srv:listen(80,function(conn) 
       conn:on("receive",function(conn,payload) 
-
-		local ok, err = pcall(process, payload,conn);
-		if not ok then
-			conn:send("HTTP/1.1 500 Internal Error\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\n500 Internal Error: " .. err);
-		end
-
+        process(payload,conn);
       end) 
       conn:on("sent",function(conn) 
 		conn:close()  
