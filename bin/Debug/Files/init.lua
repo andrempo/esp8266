@@ -115,12 +115,12 @@ function process(header, conn)
 			file.close()
 
 		else
-			conn:send("HTTP/1.1 404 Not Found\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\nPage not found");
+			conn:send("HTTP/1.1 404 Not Found\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\n404 Page not found");
 		end
 
 	--valid
 	else
-		conn:send("HTTP/1.1 400 Bad Request\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\nInvaild Request");
+		conn:send("HTTP/1.1 400 Bad Request\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\n400 Invaild Request");
 	end
 
 end
@@ -130,7 +130,11 @@ httpserver = function ()
  srv=net.createServer(net.TCP) 
     srv:listen(80,function(conn) 
       conn:on("receive",function(conn,payload) 
-        process(payload,conn);
+
+		local ok, err = pcall(process, payload,conn);
+		if not ok then
+			conn:send("HTTP/1.1 500 Internal Error\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\n500 Internal Error: " .. err);
+		end
 
       end) 
       conn:on("sent",function(conn) 
