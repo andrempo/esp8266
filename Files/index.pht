@@ -2,13 +2,14 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>My Test Page</title>
+    <title>Test Script Page</title>
 </head>
 <body>
-    <form method="post">
-        <input type="submit" value="Go" />
-        <input type="text" name="IO0" value="<?lua print('Hello, world') ?>" />
-    </form>
-	<?lua if (gpio.read(0) == 1) then print("high"); else print("low"); end ?>
+	<div>Chip: <?lua print(node.chipid()) ?></div>
+	<div>HEAP: <?lua print(node.heap()) ?></div>
+	<div>GPIO8: <?lua print(gpio.read(8)) ?></div>
+	<div>GPIO9: <?lua print(gpio.read(9)) ?></div>
+	<div>ADC0: <?lua print(adc.read(0))) ?></div>
+	<div>GPIO 0 is: <?lua if (gpio.read(0) == 1) then print("high"); else print("low"); end ?></div>
 </body>
 </html>
