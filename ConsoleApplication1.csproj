@@ -49,6 +49,7 @@
     <None Include="Files\init.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Files\index.pht">

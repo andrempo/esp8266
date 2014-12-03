@@ -90,26 +90,14 @@ function process(header, conn)
 			if ftype == "pht" or ftype == "lua" then
 
 				if ftype == "lua" then
-					--conn:send("<h1>Lua file</h1>");
+					-- Cannot read all of content to process lua only file
+					parseFile(false,conn)
 				else
-
-					repeat 
-					local line=file.readline() 
-					 if line then 
-						conn:send(line:gsub(tags, docode));
-					 end 
-					until not line 
-					
-
+					parseFile(true,conn)
 				end
 
 			else
-					repeat 
-					local line=file.readline() 
-					 if line then 
-						conn:send(line);
-					 end 
-					until not line 
+				parseFile(false,conn)
 			end
 
 			file.close()
@@ -122,6 +110,22 @@ function process(header, conn)
 	else
 		conn:send("HTTP/1.1 400 Bad Request\r\nConnection: close\r\nServer: eLua-miniweb\r\nContent-Type: text/html\r\n\r\n400 Invaild Request");
 	end
+
+end
+
+parseFile = function(isScript,conn)
+
+	repeat 
+		local line=file.readline() 
+		if line then 
+			 if isScript then
+				-- single line only script tags, via readline... is there a aleternative?
+				conn:send(line:gsub(tags, docode));
+			 else
+				conn:send(line);
+			 end
+		end 
+	until not line 
 
 end
 
