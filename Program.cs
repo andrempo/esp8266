@@ -17,7 +17,7 @@ namespace ConsoleApplication1
             SerialPort s = new SerialPort("COM3", 9600);
 
             s.Open();
-            Console.WriteLine("What Directory?");
+            Console.WriteLine("What Directory? Default Files");
             string infolder = Console.ReadLine();
             if (string.IsNullOrEmpty(infolder))
             {
