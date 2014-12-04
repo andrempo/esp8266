@@ -2,9 +2,9 @@
   txt = "text/plain",
   htm = "text/html",
   pht = "text/html",
-  gif = "image/gif",
-  jpg = "imge/jpeg",
-  png = "image/png",
+  --gif = "image/gif", one day little esp ... one day.
+  --jpg = "imge/jpeg",
+  --png = "image/png",
   lua = "text/html",
   html = "text/html"
 }
