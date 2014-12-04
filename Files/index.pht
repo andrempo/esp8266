@@ -14,5 +14,6 @@
 	<div>ADC0: <?lua print(adc.read(0)) ?></div>
 	<div>Invalid: <?lua print(adc.read(0))) ?></div>
 	<div>GPIO 0 is: <?lua if (gpio.read(0) == 1) then print("high"); else print("low"); end ?></div>
+	<a href="index.html">Html Page</a>
 </body>
 </html>
