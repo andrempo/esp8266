@@ -68,7 +68,8 @@ httpserver = function ()
 		reqdata = {};
 
 		_, _, method, req, major, minor = string.find(request, "([A-Z]+) (.+) HTTP/(%d).(%d)");
-
+          request = nil
+          collectgarbage()
 		if reqTypes[method] then
 
 
@@ -76,13 +77,13 @@ httpserver = function ()
 			if req:find("%?") then
 				local rest
 				_, _, fname, rest = req:find("(.*)%?(.*)");
-				--rest = rest .. "&";
-				--for crtpair in rest:gmatch("[^&]+") do
-					--local _, __, k, v = crtpair:find("(.*)=(.*)");
+                    rest = rest .. "&";
+                    for crtpair in rest:gmatch("[^&]+") do
+                         local _, __, k, v = crtpair:find("(.*)=(.*)");
 					---- replace all "%xx" characters with their actual value
-					--v = v:gsub("(%%%x%x)", function(s) return string.char(tonumber(s:sub(2, -1), 16)) end);
-					--reqdata[k] = v;
-				--end
+                         v = v:gsub("(%%%x%x)", function(s) return string.char(tonumber(s:sub(2, -1), 16)) end);
+                         reqdata[k] = v;
+                    end
 			else
 				fname = req;
 			end
